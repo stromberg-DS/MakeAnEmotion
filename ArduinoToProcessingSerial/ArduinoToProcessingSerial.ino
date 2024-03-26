@@ -1,6 +1,8 @@
 const int redPin = A0;      // sensor to control red color
 const int greenPin = A1;    // sensor to control green color
 const int bluePin = A2;     // sensor to control blue color
+const int pinFour = A3;
+const int pinFive = A10;
 
 void setup() {
   Serial.begin(9600);
@@ -11,7 +13,12 @@ void loop() {
   Serial.print(",");
   Serial.print(analogRead(greenPin));
   Serial.print(",");
-  Serial.println(analogRead(bluePin));
+  Serial.print(analogRead(bluePin));
+  Serial.print(",");
+  Serial.print(analogRead(pinFour));
+  Serial.print(",");
+  Serial.print(analogRead(pinFive));
+  Serial.println();
 }
 
 //Processing Code:

@@ -112,7 +112,7 @@ void serialEvent(Serial myPort) {
 
     // if the array has at least three elements, you know you got the whole
     // thing.  Put the numbers in the color variables:
-    if (potVals.length >= 3) {
+    if (potVals.length >= 5) {
       
       featureInputs[smile] = map(potVals[0], 0, 1023, -maxSmileSize, maxSmileSize);
       featureInputs[inBrow] = map(potVals[1], 0, 1023, featureInputs[outBrow]+maxBrowDifference,featureInputs[outBrow]-maxBrowDifference);
