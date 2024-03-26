@@ -60,57 +60,6 @@ void draw() {
   float insideBrow = map(featureInputs[inBrow], -10, 10, -browVariability, browVariability);
   float outsideBrow = map(featureInputs[outBrow], -10, 10, -browVariability, browVariability);
   float smileSize = map(featureInputs[smile], -10, 10, -smileVariability, smileVariability);
-  float browDifference = abs(featureInputs[inBrow] - featureInputs[outBrow]);
-
-  background(redValue, greenValue, blueValue);
-
-  //Change keys so two adjust the eybrow angles and other two adjust height
-  //
-  if (keys[LFT]) {
-    if (browDifference > maxBrowDifference) {
-      featureInputs[inBrow] = featureInputs[outBrow] - 29;
-    } else {
-      featureInputs[inBrow]-= 0.7;
-      println("inBrow: " + featureInputs[inBrow]);
-      println("outBrow: " + featureInputs[outBrow]);
-    }
-  }
-
-  if (keys[RGT]) {
-    if (browDifference > maxBrowDifference) {
-      featureInputs[inBrow] = featureInputs[outBrow] + 29;
-    } else {
-      featureInputs[inBrow] += 0.7;
-      println("inBrow: " + featureInputs[inBrow]);
-      println("outBrow: " + featureInputs[outBrow]);
-    }
-  }
-
-  if (keys[DWN]) {
-    featureInputs[outBrow]++;
-    featureInputs[inBrow]++;
-  }
-
-  if (keys[UPP]) {
-    featureInputs[outBrow]--;
-    featureInputs[inBrow]--;
-  }
-
-  if (keys[AAA]) {
-    if (abs(featureInputs[smile]) > maxSmileSize) {
-      featureInputs[smile] = maxSmileSize;
-    } else {
-      featureInputs[smile] += 0.2;
-    }
-  }
-
-  if (keys[DDD]) {
-    if (abs(featureInputs[smile]) > maxSmileSize) {
-      featureInputs[smile] = -maxSmileSize;
-    } else {
-      featureInputs[smile] -= 0.2;
-    }
-  }
 
   //Face
   fill(#DEB887);
@@ -149,70 +98,25 @@ void draw() {
 
 }
 
-void keyPressed() {
-  if (key == CODED) {
-    if (keyCode == UP) {
-      keys[UPP] = true;
-    } else if (keyCode == DOWN) {
-      keys[DWN] = true;
-    } else if (keyCode == LEFT) {
-      keys[LFT] = true;
-    } else if (keyCode == RIGHT) {
-      keys[RGT] = true;
-    }
-  } else {
-    if (key == 'a') {
-      keys[AAA] = true;
-    } else if (key == 'd') {
-      keys[DDD] = true;
-    }
-  }
-}
 
-void keyReleased() {
-  if (key == CODED) {
-    if (keyCode == UP) {
-      keys[UPP] = false;
-    } else if (keyCode == DOWN) {
-      keys[DWN] = false;
-    } else if (keyCode == LEFT) {
-      keys[LFT] = false;
-    } else if (keyCode == RIGHT) {
-      keys[RGT] = false;
-    }
-  } else {
-    if (key == 'a') {
-      keys[AAA] = false;
-    } else if (key == 'd') {
-      keys[DDD] = false;
-    }
-  }
-}
 
 void serialEvent(Serial myPort) {
 
   // get the ASCII string:
-
   String inString = myPort.readStringUntil('\n');
 
   if (inString != null) {
     inString = trim(inString);    // trim off any whitespace:
-    float[] colors = float(split(inString, ","));    // split the string on the commas and convert the resulting substrings
+    float[] potVals = float(split(inString, ","));    // split the string on the commas and convert the resulting substrings
     // into an integer array:
 
     // if the array has at least three elements, you know you got the whole
     // thing.  Put the numbers in the color variables:
-    if (colors.length >= 3) {
-
-      // map them to the range 0-255:
-
-      redValue = map(colors[0], 0, 1023, 0, 255);
-      greenValue = map(colors[1], 0, 1023, 0, 255);
-      blueValue = map(colors[2], 0, 1023, 0, 255);
+    if (potVals.length >= 3) {
       
-      featureInputs[smile] = map(colors[0], 0, 1023, -maxSmileSize, maxSmileSize);
-      featureInputs[inBrow] = map(colors[1], 0, 1023, featureInputs[outBrow]+maxBrowDifference,featureInputs[outBrow]-maxBrowDifference);
-      featureInputs[outBrow] = map(colors[2], 0, 1023, -25, 10);
+      featureInputs[smile] = map(potVals[0], 0, 1023, -maxSmileSize, maxSmileSize);
+      featureInputs[inBrow] = map(potVals[1], 0, 1023, featureInputs[outBrow]+maxBrowDifference,featureInputs[outBrow]-maxBrowDifference);
+      featureInputs[outBrow] = map(potVals[2], 0, 1023, -25, 10);
     }
   }
 }
