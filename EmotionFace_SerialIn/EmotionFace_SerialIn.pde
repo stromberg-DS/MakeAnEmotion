@@ -1,3 +1,6 @@
+// Base code used from below:
+//  https://docs.arduino.cc/built-in-examples/communication/VirtualColorMixer/
+
 int cx;
 int cy;
 int eyeX =70;
@@ -23,7 +26,7 @@ float[] featureInputs = new float[3];
 int inBrow = 0;
 int outBrow = 1;
 int smile = 2;
-int maxBrowDifference = 30;
+int maxBrowDifference = 25;
 int maxSmileSize = 14;
 
 import processing.serial.*;
@@ -98,7 +101,6 @@ void draw() {
       featureInputs[smile] = maxSmileSize;
     } else {
       featureInputs[smile] += 0.2;
-      println("Smilesize: " + featureInputs[smile]);
     }
   }
 
@@ -107,7 +109,6 @@ void draw() {
       featureInputs[smile] = -maxSmileSize;
     } else {
       featureInputs[smile] -= 0.2;
-      println("Smilesize: " + featureInputs[smile]);
     }
   }
 
@@ -138,11 +139,6 @@ void draw() {
   strokeWeight(5);
   noFill();
 
-  // stroke('Black');
-  // arc(cx, cy+80-(smileSize/2), 180, smileSize, 0,TWO_PI);
-  // stroke('Red');
-  // arc(cx, cy+80-(smileSize/2), 180, smileSize, QUARTER_PI,3.14);    //15, 165 are good values here
-
   //smile
   beginShape();
   curveVertex(cx-60, cy+60-smileSize);
@@ -151,13 +147,6 @@ void draw() {
   curveVertex(cx+60, cy+60-smileSize);
   endShape();
 
-  // fill('Red');
-  // noStroke();
-  // circle(cx-60, cy+60-2*smileSize,5);
-  // circle(cx-90, cy+60,5);
-  // circle(cx, cy+60+smileSize,5);
-  // circle(cx+90, cy+60,5);
-  // circle(cx+60, cy+60-2*smileSize,5);
 }
 
 void keyPressed() {
@@ -220,6 +209,10 @@ void serialEvent(Serial myPort) {
       redValue = map(colors[0], 0, 1023, 0, 255);
       greenValue = map(colors[1], 0, 1023, 0, 255);
       blueValue = map(colors[2], 0, 1023, 0, 255);
+      
+      featureInputs[smile] = map(colors[0], 0, 1023, -maxSmileSize, maxSmileSize);
+      featureInputs[inBrow] = map(colors[1], 0, 1023, featureInputs[outBrow]+maxBrowDifference,featureInputs[outBrow]-maxBrowDifference);
+      featureInputs[outBrow] = map(colors[2], 0, 1023, -25, 10);
     }
   }
 }
