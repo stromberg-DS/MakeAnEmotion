@@ -1,24 +1,37 @@
-const int redPin = A0;      // sensor to control red color
-const int greenPin = A1;    // sensor to control green color
-const int bluePin = A2;     // sensor to control blue color
+const int pinOne = A0;    // sensor to control red color
+const int pinTwo = A1;    // sensor to control green color
+const int pinThree = A2;  // sensor to control blue color
 const int pinFour = A3;
-const int pinFive = A10;
+const int pinFive = A4;
+const int pinSix = A5;
+
+const int pins[6]= {A0, A1, A2, A3, A4, A5};
 
 void setup() {
   Serial.begin(9600);
+
+  for (int i = 0; i<6; i++){
+    pinMode(pins[i], INPUT);
+  }
+
 }
 
 void loop() {
-  Serial.print(analogRead(redPin));
-  Serial.print(",");
-  Serial.print(analogRead(greenPin));
-  Serial.print(",");
-  Serial.print(analogRead(bluePin));
-  Serial.print(",");
-  Serial.print(analogRead(pinFour));
-  Serial.print(",");
-  Serial.print(analogRead(pinFive));
+  int potReadings[6];
+
+  for (int i = 0; i<6; i++){
+    potReadings[i] = analogRead(pins[i]);
+    delay(2);
+  }
+
+  for (int j = 0; j<6; j++){
+    Serial.print(potReadings[j]);
+    if (j<5){
+      Serial.print(",");
+    }
+  }
   Serial.println();
+  delay(10);
 }
 
 //Processing Code:
