@@ -8,7 +8,7 @@
    version="1.1"
    id="svg5"
    inkscape:version="1.1.2 (b8e25be833, 2022-02-05)"
-   sodipodi:docname="FaceTemplate.svg"
+   sodipodi:docname="FaceTest5.svg"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns="http://www.w3.org/2000/svg"
@@ -23,9 +23,9 @@
      inkscape:pagecheckerboard="0"
      inkscape:document-units="px"
      showgrid="false"
-     inkscape:zoom="0.465"
-     inkscape:cx="205.37634"
-     inkscape:cy="649.46237"
+     inkscape:zoom="1.86"
+     inkscape:cx="325.53763"
+     inkscape:cy="285.48387"
      inkscape:window-width="1920"
      inkscape:window-height="1057"
      inkscape:window-x="-8"
@@ -285,9 +285,5 @@
        inkscape:path-effect="#path-effect4566"
        inkscape:original-d="m 157.8112,65.183467 c -22.08921,3.235264 -44.17827,6.4702 -66.26846,9.705 C 71.017848,73.402524 50.493511,71.916376 29.9685,70.429933"
        sodipodi:nodetypes="ccc" />
-    <path
-       style="fill:#d38d5f;stroke:none;stroke-width:0.0999998;stroke-linejoin:round"
-       d="m 244.78689,96.33364 a 15.131315,15.131315 0 0 0 -15.13241,15.13086 15.131315,15.131315 0 0 0 15.13241,15.13241 15.131315,15.131315 0 0 0 15.13086,-15.13241 15.131315,15.131315 0 0 0 -15.13086,-15.13086 z"
-       id="path5495" />
   </g>
 </svg>
