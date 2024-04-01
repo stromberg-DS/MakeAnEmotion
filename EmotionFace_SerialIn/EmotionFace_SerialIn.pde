@@ -2,33 +2,33 @@
 //  https://docs.arduino.cc/built-in-examples/communication/VirtualColorMixer/
 
 int faceCount = 5;
+PFont raleMed, raleBold, raleBlk;
 PShape[] face = new PShape[faceCount];
 String[] fileNames = {"FaceTest1.svg", "FaceTest2.svg", "FaceTest3.svg", "FaceTest4.svg", "FaceTest5.svg"};
-String[] emotions = {"pleased", "happy", "content", "proud",  //Joy
-                    "excited", "hopeful", "excited",  
-                    "peaceful", "relieved", "caring",        //love
-                    "scared", "anxious", "nervous",          //fear
-                    "angry", "frustrated", "mean",          //angry
-                    "sad", "guilty", "disappointed",        //sad
-                    "confused", "surprised", "amazed"};      //surprised
+String[] emotions = {"a pleased", "a happy", "a content", "a proud",  //Joy
+                    "an excited", "a hopeful",  
+                    "a peaceful", "a relieved", "a caring",        //love
+                    "a scared", "an anxious", "a nervous",          //fear
+                    "an angry", "a frustrated", "a mean",          //angry
+                    "a sad", "a guilty", "a disappointed",        //sad
+                    "a confused", "a surprised", "an amazed"};      //surprised
 int rndEmo = 0; 
 int thisFaceNum;
 float halfWidth;
 float halfHeight;
 
-int cx;
-int cy;
+int cx, cy;
 int eyeXOffset =100;
-int eyeYOffset = 75;
+int eyeYOffset = -15;
 int eyeCenterX;
 int eyeCenterY;
 int pupilSize = 50;
 float irisSize = pupilSize *1.5;
 int browXoffset = 60;
-int browYoffset = 110;
+int browYoffset = 100;
 int browVariability = 15;
 int smileVariability = 400;
-int mouthYOffset = 200;
+int mouthYOffset = 300;
 int mouthWidth = 120;
 int mouthCurvePoint = mouthWidth - 30;
 
@@ -66,8 +66,8 @@ void setup() {
   myPort = new Serial(this, Serial.list()[0], 9600);
   // don't generate a serialEvent() unless you get a newline character:
   myPort.bufferUntil('\n');
-  thisFaceNum = round(random(0, 5));
-
+  thisFaceNum = int(random(0, 4));
+  
   //size(900, 900);
   fullScreen();
   background(0);
@@ -75,6 +75,10 @@ void setup() {
   cx = width/2;
   eyeCenterX = cx + eyeXOffset;
   eyeCenterY = cy -eyeYOffset;
+  raleMed = createFont("Raleway_Med.ttf", 100);
+  raleBold = createFont("Raleway_Bold.ttf", 100);
+  raleBlk = createFont("Raleway_Black.ttf", 100);
+  textFont(raleBold);
   for (int i=0; i<faceCount; i++) {
     face[i] = loadShape(fileNames[i]);
   }
@@ -108,16 +112,16 @@ void draw() {
   fill(255);
   noStroke();
   rect(cx, cy-50, 400, 250);
-  fill(#2B1100);
+  fill(#2B1100);    //Irises
   circle(cx + eyeXOffset+(map(mouseX, 0, width, -20, +20)), cy-eyeYOffset+(map(mouseY, 0, height, -20, +20)), irisSize);
   circle(cx -eyeXOffset+(map(mouseX, 0, width, -20, +20)), cy -eyeYOffset+(map(mouseY, 0, height, -20, +20)), irisSize);
 
-  fill(0);
+  fill(0);  //Pupils
   circle(cx + eyeXOffset+(map(mouseX, 0, width, -20, +20)), cy-eyeYOffset+(map(mouseY, 0, height, -20, +20)), pupilSize);
   circle(cx -eyeXOffset+(map(mouseX, 0, width, -20, +20)), cy -eyeYOffset+(map(mouseY, 0, height, -20, +20)), pupilSize);
 
 
-  shape(face[thisFaceNum], (cx), height/2);            // Draw at coordinate (280, 40) at the default size
+  shape(face[thisFaceNum], cx, cy+100);            // Draw at coordinate (280, 40) at the default size
 
   //Eyebrows
   stroke(#2B1100);
@@ -135,9 +139,8 @@ void draw() {
   curveVertex(cx+mouthCurvePoint, cy+mouthYOffset-smileSize);
   endShape();
   
-  fill(255);
-  text("What does a " + emotions[rndEmo] + "\nface look like?", cx, 100);
-  println(emotions.length);
+  fill(240);
+  text("What does " + emotions[rndEmo] + "\nface look like?", cx, 150);
   
 }
 
