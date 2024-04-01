@@ -4,6 +4,14 @@
 int faceCount = 5;
 PShape[] face = new PShape[faceCount];
 String[] fileNames = {"FaceTest1.svg", "FaceTest2.svg", "FaceTest3.svg", "FaceTest4.svg", "FaceTest5.svg"};
+String[] emotions = {"pleased", "happy", "content", "proud",  //Joy
+                    "excited", "hopeful", "excited",  
+                    "peaceful", "relieved", "caring",        //love
+                    "scared", "anxious", "nervous",          //fear
+                    "angry", "frustrated", "mean",          //angry
+                    "sad", "guilty", "disappointed",        //sad
+                    "confused", "surprised", "amazed"};      //surprised
+int rndEmo = 0; 
 int thisFaceNum;
 float halfWidth;
 float halfHeight;
@@ -11,15 +19,16 @@ float halfHeight;
 int cx;
 int cy;
 int eyeXOffset =100;
-int eyeYOffset = 60;
+int eyeYOffset = 75;
 int eyeCenterX;
 int eyeCenterY;
-int pupilSize = 40;
-int browXoffset = 30;
-int browYoffset = 45;
+int pupilSize = 50;
+float irisSize = pupilSize *1.5;
+int browXoffset = 60;
+int browYoffset = 110;
 int browVariability = 15;
 int smileVariability = 400;
-int mouthYOffset = 250;
+int mouthYOffset = 200;
 int mouthWidth = 120;
 int mouthCurvePoint = mouthWidth - 30;
 
@@ -59,7 +68,8 @@ void setup() {
   myPort.bufferUntil('\n');
   thisFaceNum = round(random(0, 5));
 
-  size(900, 900);
+  //size(900, 900);
+  fullScreen();
   background(0);
   cy = height/2;
   cx = width/2;
@@ -72,6 +82,8 @@ void setup() {
   halfHeight = face[1].getHeight();
   shapeMode(CENTER);
   rectMode(CENTER);
+  textAlign(CENTER);
+  textSize(100);
 }
 
 void draw() {
@@ -94,21 +106,22 @@ void draw() {
 
   //Eyes
   fill(255);
+  noStroke();
   rect(cx, cy-50, 400, 250);
-  fill(80, 105, 148);
-  circle(cx + eyeXOffset+(map(mouseX, 0, width, -20, +20)), cy-eyeYOffset+(map(mouseY, 0, height, -20, +20)), 30);
-  circle(cx -eyeXOffset+(map(mouseX, 0, width, -20, +20)), cy -eyeYOffset+(map(mouseY, 0, height, -20, +20)), 30);
+  fill(#2B1100);
+  circle(cx + eyeXOffset+(map(mouseX, 0, width, -20, +20)), cy-eyeYOffset+(map(mouseY, 0, height, -20, +20)), irisSize);
+  circle(cx -eyeXOffset+(map(mouseX, 0, width, -20, +20)), cy -eyeYOffset+(map(mouseY, 0, height, -20, +20)), irisSize);
 
   fill(0);
-  circle(cx + eyeXOffset+(map(mouseX, 0, width, -20, +20)), cy-eyeYOffset+(map(mouseY, 0, height, -20, +20)), 20);
-  circle(cx -eyeXOffset+(map(mouseX, 0, width, -20, +20)), cy -eyeYOffset+(map(mouseY, 0, height, -20, +20)), 20);
+  circle(cx + eyeXOffset+(map(mouseX, 0, width, -20, +20)), cy-eyeYOffset+(map(mouseY, 0, height, -20, +20)), pupilSize);
+  circle(cx -eyeXOffset+(map(mouseX, 0, width, -20, +20)), cy -eyeYOffset+(map(mouseY, 0, height, -20, +20)), pupilSize);
 
 
   shape(face[thisFaceNum], (cx), height/2);            // Draw at coordinate (280, 40) at the default size
 
   //Eyebrows
-  stroke(0);
-  strokeWeight(15);
+  stroke(#2B1100);
+  strokeWeight(27);
   line(eyeCenterX-browXoffset, eyeCenterY-browYoffset+insideBrow, eyeCenterX+browXoffset, eyeCenterY-browYoffset+outsideBrow);
   line((eyeCenterX-2*eyeXOffset)-browXoffset, eyeCenterY-browYoffset+outsideBrow, (eyeCenterX-2*eyeXOffset)+browXoffset, eyeCenterY-browYoffset+insideBrow);
 
@@ -121,7 +134,11 @@ void draw() {
   curveVertex(cx+mouthWidth, cy+mouthYOffset);
   curveVertex(cx+mouthCurvePoint, cy+mouthYOffset-smileSize);
   endShape();
-
+  
+  fill(255);
+  text("What does a " + emotions[rndEmo] + "\nface look like?", cx, 100);
+  println(emotions.length);
+  
 }
 
 
@@ -142,15 +159,19 @@ void serialEvent(Serial myPort) {
 
       featureInputs[smile] = map(potVals[3], 0, 1023, maxSmileSize, -maxSmileSize);
       featureInputs[inBrow] = map(potVals[4], 0, 1023, featureInputs[outBrow]+maxBrowDifference, featureInputs[outBrow]-maxBrowDifference);
-      featureInputs[outBrow] = map(potVals[5], 0, 1023, 10, -25);
+      featureInputs[outBrow] = map(potVals[5], 0, 1023, 30, -25);
     }
   }
 }
 
 void mouseClicked() {
-  if (thisFaceNum < faceCount-1) {
-    thisFaceNum++;
-  } else {
-    thisFaceNum = 0;
+  if (mouseButton == LEFT) {
+    if (thisFaceNum < faceCount-1) {
+      thisFaceNum++;
+    } else {
+      thisFaceNum = 0;
+    }
+  } else if(mouseButton == RIGHT) {
+        rndEmo = int(random(emotions.length));
   }
 }

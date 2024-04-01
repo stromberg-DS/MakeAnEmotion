@@ -14,6 +14,7 @@ void loop() {
 
   for (int i = 0; i<6; i++){
     potReadings[i] = analogRead(pins[i]);
+    potReadings[i] = analogRead(pins[i]);
     // delay(10);   //a small delay seems to help pot readings
   }
 
