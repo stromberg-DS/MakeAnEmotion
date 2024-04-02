@@ -4,6 +4,7 @@
 int faceCount = 5;
 PFont raleMed, raleBold, raleBlk;
 PShape[] face = new PShape[faceCount];
+PImage blushPNG;
 String[] fileNames = {"FaceTest1.svg", "FaceTest2.svg", "FaceTest3.svg", "FaceTest4.svg", "FaceTest5.svg"};
 String[] emotions = {"a pleased", "a happy", "a content", "a proud", //Joy
   "an excited", "a hopeful",
@@ -79,6 +80,7 @@ void setup() {
   for (int i=0; i<faceCount; i++) {
     face[i] = loadShape(fileNames[i]);
   }
+  blushPNG = loadImage("Blush.png");
   halfWidth = face[1].getWidth();
   halfHeight = face[1].getHeight();
   shapeMode(CENTER);
@@ -133,6 +135,7 @@ void draw() {
 
 
   shape(face[thisFaceNum], cx, cy+100);            // Draw at coordinate (280, 40) at the default size
+  image(blushPNG, mouseX, mouseY);
 
   //Eyebrows
   stroke(#2B1100);
