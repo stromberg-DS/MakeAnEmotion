@@ -5,14 +5,14 @@ int faceCount = 5;
 PFont raleMed, raleBold, raleBlk;
 PShape[] face = new PShape[faceCount];
 String[] fileNames = {"FaceTest1.svg", "FaceTest2.svg", "FaceTest3.svg", "FaceTest4.svg", "FaceTest5.svg"};
-String[] emotions = {"a pleased", "a happy", "a content", "a proud",  //Joy
-                    "an excited", "a hopeful",  
-                    "a peaceful", "a relieved", "a caring",        //love
-                    "a scared", "an anxious", "a nervous",          //fear
-                    "an angry", "a frustrated", "a mean",          //angry
-                    "a sad", "a guilty", "a disappointed",        //sad
-                    "a confused", "a surprised", "an amazed"};      //surprised
-int rndEmo = 0; 
+String[] emotions = {"a pleased", "a happy", "a content", "a proud", //Joy
+  "an excited", "a hopeful",
+  "a peaceful", "a relieved", "a caring", //love
+  "a scared", "an anxious", "a nervous", //fear
+  "an angry", "a frustrated", "a mean", //angry
+  "a sad", "a guilty", "a disappointed", //sad
+  "a confused", "a surprised", "an amazed"};      //surprised
+int rndEmo = 0;
 int thisFaceNum;
 float halfWidth;
 float halfHeight;
@@ -32,22 +32,17 @@ int mouthYOffset = 300;
 int mouthWidth = 120;
 int mouthCurvePoint = mouthWidth - 30;
 
-boolean[] keys = new boolean[6];
-int UPP = 0;
-int DWN = 1;
-int LFT = 2;
-int RGT = 3;
-int AAA = 4;
-int DDD = 5;
 
-
-//keyboard input values. stored in array for ease of use.
-float[] featureInputs = new float[3];
-int inBrow = 0;
-int outBrow = 1;
+float[] featureInputs = new float[6];
+int lftBrowAngle = 0;
+int lftBrowHeight = 1;
 int smile = 2;
+int rghtBrowAngle = 3;
+int rghtBrowHeight = 4;
+int blush = 5;
+
 int maxBrowDifference = 25;
-int maxSmileSize = 14;
+int maxSmileSize = 650;
 
 import processing.serial.*;
 
@@ -67,7 +62,7 @@ void setup() {
   // don't generate a serialEvent() unless you get a newline character:
   myPort.bufferUntil('\n');
   thisFaceNum = int(random(0, 4));
-  
+
   //size(900, 900);
   fullScreen();
   background(0);
@@ -91,9 +86,12 @@ void setup() {
 }
 
 void draw() {
-  float insideBrow = map(featureInputs[inBrow], -10, 10, -browVariability, browVariability);
-  float outsideBrow = map(featureInputs[outBrow], -10, 10, -browVariability, browVariability);
-  float smileSize = map(featureInputs[smile], -10, 10, -smileVariability, smileVariability);
+  float lOutsideBrow = featureInputs[lftBrowAngle];
+  float lInsideBrow = featureInputs[lftBrowHeight];
+  float rOutsideBrow = featureInputs[rghtBrowAngle];
+  float rInsideBrow = featureInputs[rghtBrowHeight];
+  float smileSize = featureInputs[smile];
+
   background(100);
 
 
@@ -126,8 +124,15 @@ void draw() {
   //Eyebrows
   stroke(#2B1100);
   strokeWeight(27);
-  line(eyeCenterX-browXoffset, eyeCenterY-browYoffset+insideBrow, eyeCenterX+browXoffset, eyeCenterY-browYoffset+outsideBrow);
-  line((eyeCenterX-2*eyeXOffset)-browXoffset, eyeCenterY-browYoffset+outsideBrow, (eyeCenterX-2*eyeXOffset)+browXoffset, eyeCenterY-browYoffset+insideBrow);
+  //line(x1, y1, x2, y2)
+  //left eyebrow
+  line((eyeCenterX-2*eyeXOffset)-browXoffset, eyeCenterY-browYoffset+lInsideBrow, (eyeCenterX-2*eyeXOffset)+browXoffset, eyeCenterY-browYoffset+lOutsideBrow);
+  //right eyebrow
+  line(eyeCenterX-browXoffset, eyeCenterY-browYoffset+rInsideBrow, eyeCenterX+browXoffset, eyeCenterY-browYoffset+rOutsideBrow);
+
+
+  //line(eyeCenterX-browXoffset, eyeCenterY-browYoffset+insideBrow, eyeCenterX+browXoffset, eyeCenterY-browYoffset+outsideBrow);
+  //line((eyeCenterX-2*eyeXOffset)-browXoffset, eyeCenterY-browYoffset+outsideBrow, (eyeCenterX-2*eyeXOffset)+browXoffset, eyeCenterY-browYoffset+insideBrow);
 
   //mouth
   strokeWeight(15);
@@ -138,10 +143,9 @@ void draw() {
   curveVertex(cx+mouthWidth, cy+mouthYOffset);
   curveVertex(cx+mouthCurvePoint, cy+mouthYOffset-smileSize);
   endShape();
-  
+
   fill(240);
   text("What does " + emotions[rndEmo] + "\nface look like?", cx, 150);
-  
 }
 
 
@@ -156,13 +160,16 @@ void serialEvent(Serial myPort) {
     float[] potVals = float(split(inString, ","));    // split the string on the commas and convert the resulting substrings
     // into an integer array:
 
-    // if the array has at least three elements, you know you got the whole
-    // thing.  Put the numbers in the color variables:
-    if (potVals.length >= 6) {
+    // if the array has at least 9 elements, you know you got the whole
+    // thing.  Put the numbers in the variables:
+    if (potVals.length >= 9) {
 
-      featureInputs[smile] = map(potVals[3], 0, 1023, maxSmileSize, -maxSmileSize);
-      featureInputs[inBrow] = map(potVals[4], 0, 1023, featureInputs[outBrow]+maxBrowDifference, featureInputs[outBrow]-maxBrowDifference);
-      featureInputs[outBrow] = map(potVals[5], 0, 1023, 30, -25);
+      featureInputs[smile] = map(potVals[4], 0, 1023, -maxSmileSize, maxSmileSize);
+      featureInputs[lftBrowHeight] = map(potVals[0], 0, 1023, 30, -25);
+      featureInputs[lftBrowAngle] = map(potVals[3], 0, 1023, featureInputs[lftBrowHeight]+maxBrowDifference, featureInputs[lftBrowHeight]-maxBrowDifference);
+      featureInputs[rghtBrowHeight] = map(potVals[2], 0, 1023, 30, -25);
+      featureInputs[rghtBrowAngle] = map(potVals[5], 0, 1023, featureInputs[rghtBrowHeight]+maxBrowDifference, featureInputs[rghtBrowHeight]-maxBrowDifference);
+      featureInputs[blush] = map(potVals[1], 0, 1023, 0, 100);
     }
   }
 }
@@ -174,7 +181,7 @@ void mouseClicked() {
     } else {
       thisFaceNum = 0;
     }
-  } else if(mouseButton == RIGHT) {
-        rndEmo = int(random(emotions.length));
+  } else if (mouseButton == RIGHT) {
+    rndEmo = int(random(emotions.length));
   }
 }

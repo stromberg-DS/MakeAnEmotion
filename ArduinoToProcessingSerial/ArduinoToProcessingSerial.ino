@@ -1,6 +1,7 @@
 //Core of the code from here:
 // https://docs.arduino.cc/built-in-examples/communication/VirtualColorMixer/
 
+//Pins A1 and A2 were getting weird readings for some reason, swapped to A7, A6
 const int inputPins[9]= {A0, A7, A6, A3, A4, A5, 2, 3, 4};
 
 void setup() {
@@ -31,7 +32,6 @@ void loop() {
     pinReadings[i] = !digitalRead(inputPins[i]);
   }
 
-
   for (int j = 0; j<9; j++){
     Serial.print(pinReadings[j]);
     if (j<8){
@@ -39,7 +39,7 @@ void loop() {
     }
   }
   Serial.println();
-  delay(10);
+  delay(5);
 }
 
 
