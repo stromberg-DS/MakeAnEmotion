@@ -32,6 +32,9 @@ int mouthYOffset = 300;
 int mouthWidth = 120;
 int mouthCurvePoint = mouthWidth - 30;
 
+int[] buttonInputs = new int[3];
+int[] lastButtonState = {0, 0, 0};
+
 
 float[] featureInputs = new float[6];
 int lftBrowAngle = 0;
@@ -41,7 +44,7 @@ int rghtBrowAngle = 3;
 int rghtBrowHeight = 4;
 int blush = 5;
 
-int maxBrowDifference = 25;
+int maxBrowDifference = 35;
 int maxSmileSize = 650;
 
 import processing.serial.*;
@@ -65,7 +68,6 @@ void setup() {
 
   //size(900, 900);
   fullScreen();
-  background(0);
   cy = height/2;
   cx = width/2;
   eyeCenterX = cx + eyeXOffset;
@@ -88,11 +90,22 @@ void setup() {
 void draw() {
   float lOutsideBrow = featureInputs[lftBrowAngle];
   float lInsideBrow = featureInputs[lftBrowHeight];
-  float rOutsideBrow = featureInputs[rghtBrowAngle];
-  float rInsideBrow = featureInputs[rghtBrowHeight];
+  float rOutsideBrow = featureInputs[rghtBrowHeight];
+  float rInsideBrow = featureInputs[rghtBrowAngle];
   float smileSize = featureInputs[smile];
 
   background(100);
+
+  if (isClicked(0)) {
+    rndEmo = int(random(emotions.length));
+  }
+  if (isClicked(1)) {
+    if (thisFaceNum < faceCount-1) {
+      thisFaceNum++;
+    } else {
+      thisFaceNum = 0;
+    }
+  }
 
 
   //Face
@@ -157,19 +170,23 @@ void serialEvent(Serial myPort) {
 
   if (inString != null) {
     inString = trim(inString);    // trim off any whitespace:
-    float[] potVals = float(split(inString, ","));    // split the string on the commas and convert the resulting substrings
+    float[] controllerVals = float(split(inString, ","));    // split the string on the commas and convert the resulting substrings
     // into an integer array:
 
     // if the array has at least 9 elements, you know you got the whole
     // thing.  Put the numbers in the variables:
-    if (potVals.length >= 9) {
+    if (controllerVals.length >= 9) {
 
-      featureInputs[smile] = map(potVals[4], 0, 1023, -maxSmileSize, maxSmileSize);
-      featureInputs[lftBrowHeight] = map(potVals[0], 0, 1023, 30, -25);
-      featureInputs[lftBrowAngle] = map(potVals[3], 0, 1023, featureInputs[lftBrowHeight]+maxBrowDifference, featureInputs[lftBrowHeight]-maxBrowDifference);
-      featureInputs[rghtBrowHeight] = map(potVals[2], 0, 1023, 30, -25);
-      featureInputs[rghtBrowAngle] = map(potVals[5], 0, 1023, featureInputs[rghtBrowHeight]+maxBrowDifference, featureInputs[rghtBrowHeight]-maxBrowDifference);
-      featureInputs[blush] = map(potVals[1], 0, 1023, 0, 100);
+      featureInputs[smile] = map(controllerVals[4], 0, 1023, -maxSmileSize, maxSmileSize);
+      featureInputs[lftBrowHeight] = map(controllerVals[0], 0, 1023, 30, -25);
+      featureInputs[lftBrowAngle] = map(controllerVals[3], 0, 1023, featureInputs[lftBrowHeight]-maxBrowDifference, featureInputs[lftBrowHeight]+maxBrowDifference);
+      featureInputs[rghtBrowHeight] = map(controllerVals[2], 0, 1023, 30, -25);
+      featureInputs[rghtBrowAngle] = map(controllerVals[5], 0, 1023, featureInputs[rghtBrowHeight]+maxBrowDifference, featureInputs[rghtBrowHeight]-maxBrowDifference);
+      featureInputs[blush] = map(controllerVals[1], 0, 1023, 0, 100);
+
+      buttonInputs[0] = int(controllerVals[6]);
+      buttonInputs[1] = int(controllerVals[7]);
+      buttonInputs[2] = int(controllerVals[8]);
     }
   }
 }
@@ -184,4 +201,15 @@ void mouseClicked() {
   } else if (mouseButton == RIGHT) {
     rndEmo = int(random(emotions.length));
   }
+}
+
+boolean isClicked(int buttonNum) {
+  boolean isClicked;
+  if (buttonInputs[buttonNum] != lastButtonState[buttonNum]) {
+    isClicked = boolean(buttonInputs[buttonNum]);
+  } else {
+    isClicked = false;
+  }
+  lastButtonState[buttonNum] = buttonInputs[buttonNum];
+  return isClicked;
 }
