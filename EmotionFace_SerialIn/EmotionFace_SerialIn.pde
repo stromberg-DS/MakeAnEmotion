@@ -2,6 +2,11 @@
 //  https://docs.arduino.cc/built-in-examples/communication/VirtualColorMixer/
 
 int faceCount = 5;
+int bgColorCounter=0;
+//Saturation at 42, Lightness at 53
+color[] backgrounds = {#b95454, #d23b3b, #b6b954, #f2d04e,
+                      #66b954, #54b996, #54aeb9, #546eb9,
+                      #7e54b9, #b954a7, #000000, #444444, #888888};
 PFont raleMed, raleBold, raleBlk;
 PShape[] face = new PShape[faceCount];
 PImage blushPNG;
@@ -96,7 +101,7 @@ void draw() {
   float rInsideBrow = featureInputs[rghtBrowAngle];
   float smileSize = featureInputs[smile];
 
-  background(100);
+  background(backgrounds[bgColorCounter]);
 
   if (isClicked(0)) {
     rndEmo = int(random(emotions.length));
@@ -106,6 +111,13 @@ void draw() {
       thisFaceNum++;
     } else {
       thisFaceNum = 0;
+    }
+  }
+  if (isClicked(2)) {
+    if (bgColorCounter < 11) {
+      bgColorCounter++;
+    } else {
+      bgColorCounter = 0;
     }
   }
 
