@@ -158,8 +158,8 @@ void draw() {
 
   //blush circles
   fill(#f36761, featureInputs[blush]);
-  circle(cx + blushXOffset, cy+blushYOffset, 100);
-  circle(cx - blushXOffset*1.2, cy+blushYOffset, 100);
+  circle(cx + blushXOffset, cy+blushYOffset, 125);
+  circle(cx - blushXOffset*1.2, cy+blushYOffset, 125);
 
 
   //Eyebrows
