@@ -5,11 +5,12 @@ int faceCount = 5;
 int bgColorCounter=0;
 //Saturation at 42, Lightness at 53
 color[] backgrounds = {#b95454, #d23b3b, #b6b954, #f2d04e,
-                      #66b954, #54b996, #54aeb9, #546eb9,
-                      #7e54b9, #b954a7, #000000, #444444, #888888};
+  #66b954, #54b996, #54aeb9, #546eb9,
+  #7e54b9, #b954a7, #000000, #444444, #888888};
 PFont raleMed, raleBold, raleBlk;
 PShape[] face = new PShape[faceCount];
-PImage blushPNG;
+PShape blushSVG;
+//PImage blushPNG;
 String[] fileNames = {"FaceTest1.svg", "FaceTest2.svg", "FaceTest3.svg", "FaceTest4.svg", "FaceTest5.svg"};
 String[] emotions = {"a pleased", "a happy", "a content", "a proud", //Joy
   "an excited", "a hopeful",
@@ -49,6 +50,8 @@ int smile = 2;
 int rghtBrowAngle = 3;
 int rghtBrowHeight = 4;
 int blush = 5;
+int blushXOffset = 150;
+int blushYOffset = 185;
 
 int maxBrowDifference = 35;
 int maxSmileSize = 650;
@@ -85,7 +88,11 @@ void setup() {
   for (int i=0; i<faceCount; i++) {
     face[i] = loadShape(fileNames[i]);
   }
-  blushPNG = loadImage("Blush.png");
+  blushSVG = loadShape("BlushFade.svg");
+  //blushSVG = loadShape("BlushSolid.svg");
+
+
+
   halfWidth = face[1].getWidth();
   halfHeight = face[1].getHeight();
   shapeMode(CENTER);
@@ -147,7 +154,13 @@ void draw() {
 
 
   shape(face[thisFaceNum], cx, cy+100);            // Draw at coordinate (280, 40) at the default size
-  image(blushPNG, mouseX, mouseY);
+  //image(blushPNG, mouseX, mouseY);
+
+  //blush circles
+  fill(#f36761, featureInputs[blush]);
+  circle(cx + blushXOffset, cy+blushYOffset, 100);
+  circle(cx - blushXOffset*1.2, cy+blushYOffset, 100);
+
 
   //Eyebrows
   stroke(#2B1100);
@@ -197,7 +210,7 @@ void serialEvent(Serial myPort) {
       featureInputs[lftBrowAngle] = map(controllerVals[3], 0, 1023, featureInputs[lftBrowHeight]-maxBrowDifference, featureInputs[lftBrowHeight]+maxBrowDifference);
       featureInputs[rghtBrowHeight] = map(controllerVals[2], 0, 1023, 30, -25);
       featureInputs[rghtBrowAngle] = map(controllerVals[5], 0, 1023, featureInputs[rghtBrowHeight]+maxBrowDifference, featureInputs[rghtBrowHeight]-maxBrowDifference);
-      featureInputs[blush] = map(controllerVals[1], 0, 1023, 0, 100);
+      featureInputs[blush] = map(controllerVals[1], 0, 1023, 0, 255);
 
       buttonInputs[0] = int(controllerVals[6]);
       buttonInputs[1] = int(controllerVals[7]);
