@@ -111,7 +111,12 @@ void draw() {
   background(backgrounds[bgColorCounter]);
 
   if (isClicked(0)) {
-    rndEmo = int(random(emotions.length));
+    //rndEmo = int(random(emotions.length));
+    if (rndEmo < emotions.length) {
+      rndEmo++;
+    } else {
+      rndEmo = 0;
+    }
   }
   if (isClicked(1)) {
     if (thisFaceNum < faceCount-1) {
