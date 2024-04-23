@@ -1,0 +1,31 @@
+**Create Executable File**
+	With Processing sketch open, go to file>Export Application
+	Select Raspberry Pi 64-bit, select Presentation mode.
+	This will create a folder "linux-aarch64" in your sketch folder.
+	Copy any images, fonts into this folder.
+	Open the .sh file that shares the name of your sketch (might not
+	have ".sh" in filename). 
+
+**Opening file**
+	Make sure Processing is closed - Serial might get mad
+	Double-click file from above... or...
+	
+	Command Line - navigate to directory, type ./filename(./EmotionFace for example)
+
+	
+**Auto Start Setup (learn.sparkfun.com/tutorials/how-to-run-a-raspberry-pi-program-on-startup/all#method-2-autostart)
+	Make "autostart" directory in "/home/pi/.config" 
+	On this pi it would be home/scikiface/.config/autostart
+	**.config is a hidden folder, just a heads up.
+
+	Make a file in the autostart directory called name.desktop
+	(emoface.desktop in our case)
+
+	edit the file and put in the following:
+		[Desktop Entry]
+		Type=Application
+		Name=EmotionFace
+		Exec=/home/scikiface/Desktop/EmotionFace_SerialIn/linux-aarch64/EmotionFace_SerialIn
+	Now it should autostart on reboot!
+
+		

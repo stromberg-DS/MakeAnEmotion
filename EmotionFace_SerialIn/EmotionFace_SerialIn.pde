@@ -12,7 +12,7 @@ PShape[] face = new PShape[faceCount];
 PShape blushSVG;
 //PImage blushPNG;
 String[] fileNames = {"FaceTest1.svg", "FaceTest2.svg", "FaceTest3.svg", "FaceTest4.svg", "FaceTest5.svg"};
-String[] emotions = {"a pleased", "a happy", "a content", "a proud", //Joy
+String[] emotions = {"a pleased", "a happy", "a content", "a proud", "a kind", //Joy
   "an excited", "a hopeful",
   "a peaceful", "a relieved", "a caring", //love
   "a scared", "an anxious", "a nervous", //fear
@@ -75,6 +75,8 @@ void setup() {
   myPort.bufferUntil('\n');
   thisFaceNum = int(random(0, 4));
 
+  shuffleArray(emotions);
+
   //size(900, 900);
   fullScreen();
   cy = height/2;
@@ -112,7 +114,7 @@ void draw() {
 
   if (isClicked(0)) {
     //rndEmo = int(random(emotions.length));
-    if (rndEmo < emotions.length) {
+    if (rndEmo < emotions.length-1) {
       rndEmo++;
     } else {
       rndEmo = 0;
@@ -245,4 +247,14 @@ boolean isClicked(int buttonNum) {
   }
   lastButtonState[buttonNum] = buttonInputs[buttonNum];
   return isClicked;
+}
+
+//Fisher-Yates shuffle
+void shuffleArray(String[] ar){
+  for(int i = ar.length-1; i>0; i--){
+    int index = int(random(i+1));
+    String a = ar[index];
+    ar[index] = ar[i];
+    ar[i] = a;
+  }
 }
