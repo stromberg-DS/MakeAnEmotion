@@ -30,6 +30,13 @@ int eyeYOffset = -15;
 int eyeCenterX;
 int eyeCenterY;
 int pupilSize = 50;
+int pupilVariation = 30;
+float curPupilX = 0;
+float curPupilY = 0;
+int newPupilX;
+int newPupilY;
+long lastPupilPause = 0;
+int pupilPauseTime = 2000;
 float irisSize = pupilSize *1.5;
 int browXoffset = 60;
 int browYoffset = 100;
@@ -76,6 +83,10 @@ void setup() {
   thisFaceNum = int(random(0, 4));
 
   shuffleArray(emotions);
+
+  newPupilX = int(random(-pupilVariation, pupilVariation));
+  newPupilY = int(random(-pupilVariation, pupilVariation));
+
 
   //size(900, 900);
   fullScreen();
@@ -147,17 +158,40 @@ void draw() {
 
 
 
-  //Eyes
+  //////Eyes//////
+
+  if (abs(newPupilX-curPupilX) >1 && abs(newPupilY-curPupilY) > 1) {
+    if (curPupilX < newPupilX) {
+      curPupilX+= 0.08;
+    } else {
+      curPupilX-=0.08;
+    }
+
+    if (curPupilY < newPupilY) {
+      curPupilY+=0.1;
+    } else {
+      curPupilY-=0.1;
+    }
+  } else {
+    if (millis()-lastPupilPause >pupilPauseTime) {
+      newPupilX = int(random(-pupilVariation, pupilVariation));
+      newPupilY = int(random(-pupilVariation, pupilVariation));
+      lastPupilPause = millis();
+      pupilPauseTime = int(random(0, 5000));
+    }
+  }
+
   fill(255);
   noStroke();
   rect(cx, cy-50, 400, 250);
-  fill(#2B1100);    //Irises
-  circle(cx + eyeXOffset+(map(mouseX, 0, width, -20, +20)), cy-eyeYOffset+(map(mouseY, 0, height, -20, +20)), irisSize);
-  circle(cx -eyeXOffset+(map(mouseX, 0, width, -20, +20)), cy -eyeYOffset+(map(mouseY, 0, height, -20, +20)), irisSize);
+  
+  fill(#2B1100);
+  circle(cx + eyeXOffset + curPupilX, cy - eyeYOffset + curPupilY, irisSize);
+  circle(cx -eyeXOffset + curPupilX, cy - eyeYOffset + curPupilY, irisSize);
 
-  fill(0);  //Pupils
-  circle(cx + eyeXOffset+(map(mouseX, 0, width, -20, +20)), cy-eyeYOffset+(map(mouseY, 0, height, -20, +20)), pupilSize);
-  circle(cx -eyeXOffset+(map(mouseX, 0, width, -20, +20)), cy -eyeYOffset+(map(mouseY, 0, height, -20, +20)), pupilSize);
+  fill(0);
+  circle(cx + eyeXOffset + curPupilX, cy - eyeYOffset + curPupilY, pupilSize);
+  circle(cx -eyeXOffset + curPupilX, cy - eyeYOffset + curPupilY, pupilSize);
 
 
   shape(face[thisFaceNum], cx, cy+100);            // Draw at coordinate (280, 40) at the default size
@@ -250,8 +284,8 @@ boolean isClicked(int buttonNum) {
 }
 
 //Fisher-Yates shuffle
-void shuffleArray(String[] ar){
-  for(int i = ar.length-1; i>0; i--){
+void shuffleArray(String[] ar) {
+  for (int i = ar.length-1; i>0; i--) {
     int index = int(random(i+1));
     String a = ar[index];
     ar[index] = ar[i];
