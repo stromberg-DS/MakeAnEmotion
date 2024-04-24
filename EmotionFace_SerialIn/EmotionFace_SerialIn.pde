@@ -26,7 +26,7 @@ float halfHeight;
 
 int cx, cy;
 int eyeXOffset =100;
-int eyeYOffset = -15;
+int eyeYOffset = -10;
 int eyeCenterX;
 int eyeCenterY;
 int pupilSize = 50;
