@@ -6,11 +6,23 @@
 	Open the .sh file that shares the name of your sketch (might not
 	have ".sh" in filename). 
 
+**Hiding the mouse**
+	install unclutter (sudo apt install unclutter)
+	run "sudo raspi-config"
+	go to "6 Advanced options>A6 Wayland> W1 X11" and press enter. Reboot.
+	run "unclutter -idle 0.1" Number is the number of seconds before hiding mouse.
+	Open the executable file in a text editor (from above, "EmotionFace_Serialin.sh"
+		in this example.
+	Below "#!/bin/sh" add "unclutter -idle 0.1 &" this will run unclutter before the
+		program starts.
+
+
 **Opening file**
 	Make sure Processing is closed - Serial might get mad
 	Double-click file from above... or...
 	
 	Command Line - navigate to directory, type ./filename(./EmotionFace for example)
+
 
 	
 **Auto Start Setup (learn.sparkfun.com/tutorials/how-to-run-a-raspberry-pi-program-on-startup/all#method-2-autostart)
@@ -27,5 +39,9 @@
 		Name=EmotionFace
 		Exec=/home/scikiface/Desktop/EmotionFace_SerialIn/linux-aarch64/EmotionFace_SerialIn
 	Now it should autostart on reboot!
+
+
+
+
 
 		
